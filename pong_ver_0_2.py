@@ -5,7 +5,7 @@ import random
 # Define some colors
 BLACK = (0 ,0, 0)
 WHITE = (255, 255, 255)
- 
+RED = (255,20,147)
  
 # This class represents the ball
 # It derives from the "Sprite" class in Pygame
@@ -156,7 +156,7 @@ class Player(pygame.sprite.Sprite):
         #print Ball.rect()
 score1 = 0
 score2 = 0
- 
+foul1 = 0 
 # Call this function so the Pygame library can initialize itself
 pygame.mixer.init()
 pygame.mixer.pre_init(44100, -16, 2, 2048)
@@ -174,8 +174,8 @@ pygame.display.set_caption('Pong')
 pygame.mouse.set_visible(0)
  
 # This is a font we use to draw text on the screen (size 36)
-font = pygame.font.Font(None, 36)
- 
+font = pygame.font.Font(None, 24)
+font2 = pygame.font.Font(None, 30) 
 # Create a surface we can draw on
 background = pygame.Surface(screen.get_size())
  
@@ -220,13 +220,13 @@ while not exit_program:
  
     # Clear the screen
     screen.fill(BLACK)
- 
+    #global foul1=0
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exit_program = True
  
     # Stop the game if there is an imbalance of 3 points
-    if abs(score1 - score2) > 22:
+    if abs(score1 - score2) > 25:
         done = True
  
     if not done:
@@ -246,7 +246,59 @@ while not exit_program:
     if pygame.sprite.spritecollide(player1, balls, False):
         # The 'diff' lets you try to bounce the ball left or right depending where on the paddle you hit it
         diff = (player1.rect.x + player1.width/2) - (ball.rect.x+ball.width/2)
-        print diff
+        #print diff
+        foul1 = ball.y - player1.rect.y
+        print foul1
+        
+        
+        if foul1 > 9.5:
+            pygame.mixer.music.stop()
+            # scorefoul = "FOUL !!!!!!!! humans lose 5 points... "
+            # text2 = font2.render(scorefoul, 1, WHITE)
+            # textpos = (450, 0)
+            # screen.blit(text2, textpos)
+            score1 = score1-5
+            j1 = pygame.mixer.Sound('horn1.wav')
+            j1.play()
+            randsong = random.randrange(1,10)
+            print randsong
+            ## pygame.mixer.Sound('firearm.wav')
+            if randsong == 1:
+                
+                pygame.mixer.music.load('numb.flac')
+                pygame.mixer.music.play()
+            if randsong == 2:
+            
+                pygame.mixer.music.load('yess2.flac')
+                pygame.mixer.music.play() 
+            if randsong == 3:
+               
+                pygame.mixer.music.load('yess10.flac')
+                pygame.mixer.music.play() 
+            if randsong == 4:
+                
+                pygame.mixer.music.load('yess5.flac')
+                pygame.mixer.music.play()
+            if randsong == 5:
+                
+                pygame.mixer.music.load('yess6.flac')
+                pygame.mixer.music.play() 
+            if randsong == 6:
+                
+                pygame.mixer.music.load('yess7.flac')
+                pygame.mixer.music.play()          
+            if randsong == 7:
+               
+                pygame.mixer.music.load('firearm.wav')
+                pygame.mixer.music.play()   
+            if randsong == 8:
+                
+                pygame.mixer.music.load('yess8.flac')
+                pygame.mixer.music.play()
+            if randsong == 9:
+               
+                pygame.mixer.music.load('yess9.flac')
+                pygame.mixer.music.play()
         # Set the ball's y position in case we hit the ball on the edge of the paddle
         t_minus = player1.rect.y
         ball.y = t_minus-2
@@ -268,6 +320,12 @@ while not exit_program:
         
  
     # Print the score
+    if foul1 > 9.5:
+            #pygame.mixer.music.stop()
+            scorefoul = "FOUL !!!!!!!! humans lose 5 points... "
+            text2 = font2.render(scorefoul, 1, RED)
+            textpos = (440, 0)
+            screen.blit(text2, textpos)
     scoreprint = "Player 1(humans): "+str(score1)
     text = font.render(scoreprint, 1, WHITE)
     textpos = (0, 0)
@@ -275,7 +333,7 @@ while not exit_program:
  
     scoreprint = "Player 2(machines): "+str(score2)
     text = font.render(scoreprint, 1, WHITE)
-    textpos = (300, 0)
+    textpos = (250, 0)
     screen.blit(text, textpos)
  
     # Draw Everything
@@ -284,6 +342,6 @@ while not exit_program:
     # Update the screen
     pygame.display.flip()
      
-    clock.tick(20)
+    clock.tick(50)
  
 pygame.quit()
